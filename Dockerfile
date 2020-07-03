@@ -39,7 +39,14 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/
 apt update && apt install -y nodejs yarn
 
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install php-memcached php5-mysql php5-pgsql php5-sqlite php5-intl php-gd php-mbstring php-yaml php5-curl php-json php-redis composer
+    && apt-get -y --no-install-recommends install php5-memcached php5-mysql php5-pgsql php5-sqlite php5-intl php5-gd php5-json php5-curl php5-redis
+
+RUN cd /tmp \
+&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+&& php -r "if (hash_file('sha384', 'composer-setup.php') === 'e5325b19b381bfd88ce90a5ddb7823406b2a38cff6bb704b0acc289a09c8128d4a8ce2bbafcd1fcbdc38666422fe2806') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+&& php composer-setup.php \
+&& php -r "unlink('composer-setup.php');" \
+&& mv composer.phar /usr/local/bin/composer
 
 RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
