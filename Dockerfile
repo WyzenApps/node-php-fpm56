@@ -30,7 +30,7 @@ RUN apt-get update \
     && apt-get -y --no-install-recommends install curl wget git sudo locales locales-all \
     && locale-gen $LOCALE && update-locale \
     && echo 'Europe/Paris' > /etc/timezone && rm /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && dpkg-reconfigure -f noninteractive tzdata \
-    && usermod -u 33 www-data && groupmod -g 33 www-data \
+    && usermod -u 33 -d $APPDIR www-data && groupmod -g 33 www-data \
     && mkdir -p $APPDIR && chown www-data:www-data $APPDIR
 
 RUN cd /tmp && wget https://deb.nodesource.com/setup_12.x && chmod +x setup_12.x && ./setup_12.x && \
